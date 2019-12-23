@@ -1,0 +1,17 @@
+{
+  "name": "hostbook",
+  "version": "1.0.0",
+  "description": "Not a guestbook",
+  "dependencies": {
+    "bonjour": "^3.5.0",
+    "coherence-framework": "^1.5.1",
+    "dotlocal": "^1.1.0",
+    "express": "^4.17.1",
+    "pump": "^3.0.0",
+    "request": "^2.88.0",
+    "stdopt": "^3.1.0",
+    "stdrun": "^5.0.1"
+  },
+  "author": "Brecht Savelkoul",
+  "license": "Apache-2.0"
+}
