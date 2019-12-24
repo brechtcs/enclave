@@ -1,7 +1,4 @@
 {
-  "name": "hostbook",
-  "version": "1.0.0",
-  "description": "Not a guestbook",
   "dependencies": {
     "bonjour": "^3.5.0",
     "client-ip": "^1.0.0",
@@ -13,7 +10,5 @@
     "request": "^2.88.0",
     "stdopt": "^3.1.0",
     "stdrun": "^5.0.1"
-  },
-  "author": "Brecht Savelkoul",
-  "license": "Apache-2.0"
+  }
 }
