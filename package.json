@@ -4,9 +4,11 @@
   "description": "Not a guestbook",
   "dependencies": {
     "bonjour": "^3.5.0",
+    "client-ip": "^1.0.0",
     "coherence-framework": "^1.5.1",
     "dotlocal": "^1.1.0",
     "express": "^4.17.1",
+    "is-localhost-ip": "^1.3.0",
     "pump": "^3.0.0",
     "request": "^2.88.0",
     "stdopt": "^3.1.0",
