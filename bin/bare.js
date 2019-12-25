@@ -1,4 +1,4 @@
 var run = require('stdrun')
-var serve = require('../lib/server')
+var serve = require('../lib/controller')
 
 run(serve)
