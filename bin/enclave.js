@@ -1,10 +1,10 @@
 var { number } = require('stdopt')
+var host = require('../lib/host')
 var run = require('stdrun')
-var serve = require('../lib/servers/app')
 
 function enclave (opts = {}) {
   var port = number(opts.port).or(opts.p).value()
-  serve({ port })
+  host({ port })
 }
 
 run(enclave)
