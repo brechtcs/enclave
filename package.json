@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test": "dependency-check --no-dev bin/enclave.js && standard"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "bonjour": "^3.5.0",
@@ -10,6 +13,11 @@
     "pump": "^3.0.0",
     "request": "^2.88.0",
     "stdopt": "^3.3.0",
+    "stdprop": "^1.0.0",
     "stdrun": "^5.0.1"
+  },
+  "devDependencies": {
+    "dependency-check": "^4.1.0",
+    "standard": "^14.3.1"
   }
 }
