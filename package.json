@@ -16,7 +16,7 @@
     "rfc4648": "^1.3.0",
     "stdopt": "^6.0.0",
     "stdprop": "^1.0.0",
-    "stdrun": "^5.0.1"
+    "stdrun": "^5.0.2"
   },
   "devDependencies": {
     "dependency-check": "^4.1.0",
