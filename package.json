@@ -8,7 +8,6 @@
     "bonjour": "^3.5.0",
     "client-ip": "^1.0.0",
     "coherence-framework": "^1.5.1",
-    "dotlocal": "^1.1.0",
     "express": "^4.17.1",
     "http-proxy": "^1.18.0",
     "ip": "^1.1.5",
