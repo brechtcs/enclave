@@ -18,7 +18,8 @@
     "stdmodel": "^2.0.2",
     "stdopt": "^9.0.0",
     "stdprop": "^1.0.0",
-    "stdrun": "^5.0.2"
+    "stdrun": "^5.0.2",
+    "ua-parser-js": "^0.7.21"
   },
   "devDependencies": {
     "dependency-check": "^4.1.0",
