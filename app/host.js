@@ -1,10 +1,10 @@
-var Host = require('./models/host')
+var Host = require('../models/host')
 var UAParser = require('ua-parser-js')
 var body = require('body-parser')
 var express = require('express')
-var guests = require('./routes/guests')
+var guests = require('./guests')
 var number = require('stdopt/number')
-var posts = require('./routes/posts')
+var posts = require('./posts')
 var ui = require('./ui')
 
 module.exports = function host (opts = {}) {

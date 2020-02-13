@@ -1,10 +1,10 @@
 var Coherence = require('coherence-framework')
-var Guest = require('./models/guest')
-var Post = require('./models/post')
+var Guest = require('../models/guest')
+var Post = require('../models/post')
 var css = require('./css')
-var guests = require('./views/guests')
-var posts = require('./views/posts')
-var settings = require('./views/settings')
+var guests = require('../views/guests')
+var posts = require('../views/posts')
+var settings = require('../views/settings')
 
 function layout (opts, content, apply) {
   return ['html',

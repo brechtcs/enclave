@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "dependency-check --no-dev bin/enclave.js && standard"
+    "test": "dependency-check --no-dev enclave.js && standard"
   },
   "dependencies": {
     "async-exit-hook": "^2.0.1",
