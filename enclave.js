@@ -1,7 +1,7 @@
 var { boolean, nothing, number, string } = require('stdopt')
-var db = require('../lib/data')
-var host = require('../lib/host')
-var local = require('../lib/local')
+var db = require('./app/data')
+var host = require('./app/host')
+var local = require('./app/local')
 var run = require('stdrun')
 
 async function enclave (opts = {}, name) {
