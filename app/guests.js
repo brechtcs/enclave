@@ -5,6 +5,16 @@ var client = require('client-ip')
 
 var proxy = createProxyServer()
 
+module.exports.display = function (req, res) {
+  if (req.get('Enclave-Origin')) {
+    var guests = Guest.list()
+    res.render('guests', { guests })
+  } else {
+    var host = Host.get()
+    res.redirect(`/guests/${host.publicKey}${req.url}`)
+  }
+}
+
 module.exports.identify = function (req, res, next) {
   req.guest = Guest.get(req.get('Enclave-Origin'))
   next()
@@ -23,39 +33,7 @@ module.exports.tunnel = function (req, res, next) {
   if (req.url === '/') {
     return next()
   }
-  tunnel(req, res, next)
-}
 
-module.exports.tunnel.coherence = function (req, res, next) {
-  var referer = new URL(req.headers.referer)
-  var url = new URL(req.url, 'http://localhost')
-  url.pathname = rewrite(referer.pathname, () => '/coherence' + url.pathname)
-
-  if (url.pathname === '/' || url.pathname.startsWith('/coherence')) {
-    return next()
-  }
-  req.url = url.pathname + url.search
-  tunnel(req, res, next)
-}
-
-module.exports.tunnel.partial = function (req, res, next) {
-  var url = new URL(req.headers.referer)
-  url.pathname = rewrite(url.pathname, last => '/partial' + last)
-
-  if (url.pathname === '/' || url.pathname.startsWith('/partial')) {
-    return next()
-  }
-  req.url = url.pathname + url.search
-  tunnel(req, res, next)
-}
-
-function rewrite (path, last) {
-  var parts = path.split(/guests\/(\w+)/)
-  parts.push(last(parts.pop()))
-  return parts.map(p => p === '/' ? '/guests/' : p).join('')
-}
-
-function tunnel (req, res, next) {
   var parts, idx, key, guest
   parts = req.url.split('/')
   idx = destination(parts)

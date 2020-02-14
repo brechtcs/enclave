@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <<common/head "Guests">>
+  <body>
+    <h1><<t host.name>></h1>
+    <h2>Guests</h2>
+    <<common/nav>>
+    <ul>
+      <<for guest $in.guests>>
+        <li><a href="guests/<<t guest.key>>/">
+          <<t guest.name>>
+        </a></li>
+      <</for>>
+    </ul>
+  </body>
+</html>

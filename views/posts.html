@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <<common/head "Posts">>
+  <body>
+    <h1><<t host.name>></h1>
+    <h2>Posts</h2>
+    <<common/nav>>
+    <form method="POST">
+      <input type="text" name="content" placeholder="Leave a message...">
+      <input type="submit" value="send">
+    </form>
+    <<for post $in.posts>>
+      <article>
+        <address><<t post.guest.name>></address>
+        <section><<t post.content>></section>
+      </article>
+    <</for>>
+  </body>
+</html>
