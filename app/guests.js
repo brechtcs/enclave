@@ -7,8 +7,9 @@ var proxy = createProxyServer()
 
 module.exports.display = function (req, res) {
   if (req.get('Enclave-Origin')) {
+    var title = 'Guests'
     var guests = Guest.list()
-    res.render('guests', { guests })
+    res.render('guests', { title, guests })
   } else {
     var host = Host.get()
     res.redirect(`/guests/${host.publicKey}${req.url}`)

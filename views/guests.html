@@ -1,10 +1,13 @@
 <!doctype html>
 <html>
-  <<common/head "Guests">>
+  <<common/head $in.title>>
   <body>
     <h1><<t host.name>></h1>
-    <h2>Guests</h2>
-    <<common/nav>>
+    <h2><<t $in.title>></h2>
+    <nav>
+      <span><a href="posts">posts</a></span>&nbsp;
+      <span><a class="active">guests</a></span>
+    </nav>
     <ul>
       <<for guest $in.guests>>
         <li><a href="guests/<<t guest.key>>/">
