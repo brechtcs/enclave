@@ -1,0 +1,12 @@
+html {
+  color: #222;
+}
+
+* + * {
+  margin-top: 1em;
+}
+
+address + *,
+li + li {
+  margin-top: initial;
+}

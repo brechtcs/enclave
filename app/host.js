@@ -8,22 +8,25 @@ var logger = require('./logger')
 var number = require('stdopt/number')
 var posts = require('./posts')
 
+var assets = join(__dirname, '../public')
+var views = join(__dirname, '../views')
+
 module.exports = function host (opts = {}) {
   var host = Host.get()
   var mold = new Mold({ host })
   var server = express()
 
-  server.set('views', join(__dirname, '../views'))
+  server.set('views', views)
   server.set('view engine', 'html')
   server.engine('html', mold.engine(server, 'html'))
 
   server.use(guests.identify)
   server.use(logger)
   server.get('/', home)
-  server.get('/favicon.ico', favicon)
   server.get('/guests', guests.display)
   server.get('/posts', posts.display)
   server.use('/guests', guests.tunnel)
+  server.use(express.static(assets))
 
   server.use(body.json())
   server.use(body.urlencoded({ extended: false }))
@@ -36,8 +39,4 @@ module.exports = function host (opts = {}) {
 
 function home (req, res) {
   res.redirect('posts')
-}
-
-function favicon (req, res) {
-  res.end('')
 }
