@@ -5,7 +5,12 @@ var client = require('client-ip')
 
 var proxy = createProxyServer()
 
-module.exports.display = function (req, res) {
+module.exports.display = display
+module.exports.identify = identify
+module.exports.receive = receive
+module.exports.tunnel = tunnel
+
+function display (req, res) {
   if (req.get('Enclave-Origin')) {
     var title = 'Guests'
     var guests = Guest.list()
@@ -16,12 +21,12 @@ module.exports.display = function (req, res) {
   }
 }
 
-module.exports.identify = function (req, res, next) {
+function identify (req, res, next) {
   req.guest = Guest.get(req.get('Enclave-Origin'))
   next()
 }
 
-module.exports.receive = function (req, res) {
+function receive (req, res) {
   var guest = req.body
   guest.address = client(req)
 
@@ -30,7 +35,7 @@ module.exports.receive = function (req, res) {
   res.end()
 }
 
-module.exports.tunnel = function (req, res, next) {
+function tunnel (req, res, next) {
   if (req.url === '/') {
     return next()
   }
