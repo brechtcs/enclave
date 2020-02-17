@@ -1,5 +1,6 @@
 var Base = require('stdopt/base')
 var ip = require('ip')
+var os = require('os')
 
 function Address (a) {
   if (this instanceof Address) Base.call(this, a)
@@ -11,8 +12,8 @@ Address.parse = function (a) {
     return a
   } else if (ip.isV4Format(a)) {
     return '::ffff:' + a
-  } else if (a === 'localhost') {
-    return '::fe80:1'
+  } else if (a === os.hostname()) {
+    return '::ffff:127.0.0.1'
   }
 }
 
