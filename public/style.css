@@ -2,11 +2,36 @@ html {
   color: #222;
 }
 
-* + * {
+* + article {
   margin-top: 1em;
 }
 
-address + *,
-li + li {
-  margin-top: initial;
+header {
+  font-weight: bold;
+}
+header strong {
+  font-variant: small-caps;
+}
+header time {
+  font-size: .9em;
+  font-style: italic;
+  font-weight: normal;
+  line-break: none;
+}
+header time::before {
+  content: '('
+}
+header time::after {
+  content: ')'
+}
+
+textarea {
+  border: none;
+  display: block;
+  min-height: 7em;
+  width: 100%;
+}
+textarea + textarea {
+  margin-top: .5em;
+  min-height: 11em;
 }

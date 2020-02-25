@@ -2,11 +2,12 @@ var { join } = require('path')
 var Host = require('../models/host')
 var Mold = require('./mold')
 var body = require('body-parser')
+var drafts = require('./drafts')
 var express = require('express')
 var guests = require('./guests')
 var logger = require('./logger')
 var number = require('stdopt/number')
-var posts = require('./posts')
+var stories = require('./stories')
 
 var assets = join(__dirname, '../public')
 var views = join(__dirname, '../views')
@@ -22,21 +23,20 @@ module.exports = function host (opts = {}) {
 
   server.use(guests.identify)
   server.use(logger)
-  server.get('/', home)
+  server.get('/', stories.overview)
+  server.get('/drafts/new', drafts.create)
+  server.get('/drafts/:id', drafts.display)
   server.get('/guests', guests.display)
-  server.get('/posts', posts.display)
   server.use('/guests', guests.tunnel)
+  server.get('/stories', stories.overview)
+  server.get('/stories/:id', stories.detail)
   server.use(express.static(assets))
 
   server.use(body.json())
   server.use(body.urlencoded({ extended: false }))
   server.post('/guests', guests.receive)
-  server.post('/posts', posts.receive)
+  server.post('/stories', stories.publish)
 
   var port = number(opts.port).or(host.port).value()
   return server.listen(port)
-}
-
-function home (req, res) {
-  res.redirect('posts')
 }

@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <<common/head $in.title>>
+  <body>
+    <h1><<t host.name>></h1>
+    <nav>
+      <span><a class="active">stories</a></span>&nbsp;
+      <span><a href="guests">guests</a></span>
+    </nav>
+    <h2><<t $in.title>></h2>
+    <a href="/drafts/new?to=<<t host.publicKey>>">
+      + Write a story
+    </a>
+    <<for story $in.stories>>
+      <article>
+        <header>
+          <span>
+            <<t story.from.name>>&nbsp;
+            <<if story.to.isHost>>
+              published a story
+            <<else>>
+              shared a story with <<t story.to.name>>
+            <</if>>&nbsp;
+          </span>
+          <<if story.posted === Infinity>>
+            <time>pending</time>
+          <<else>>
+            <<common/date story.id>>
+          <</if>>
+        </header>
+        <section class="lede">
+          <<h story.lede>>
+        </section>
+        <section class="main">
+          <a href="/stories/<<t story.id>>">
+            Read more...
+          </a>
+        </section>
+      </article>
+    <</for>>
+  </body>
+</html>

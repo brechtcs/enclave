@@ -2,6 +2,7 @@ var { createProxyServer } = require('http-proxy')
 var Guest = require('../models/guest')
 var Host = require('../models/host')
 var client = require('client-ip')
+var ip = require('ip')
 
 var proxy = createProxyServer()
 
@@ -11,18 +12,14 @@ module.exports.receive = receive
 module.exports.tunnel = tunnel
 
 function display (req, res) {
-  if (req.get('Enclave-Origin')) {
-    var title = 'Guests'
-    var guests = Guest.list()
-    res.render('guests', { title, guests })
-  } else {
-    var host = Host.get()
-    res.redirect(`/guests/${host.publicKey}${req.url}`)
-  }
+  var title = 'Guests'
+  var guests = Guest.list()
+  res.render('guests', { title, guests })
 }
 
 function identify (req, res, next) {
   req.guest = Guest.get(req.get('Enclave-Origin'))
+  req.local = ip.isLoopback(client(req))
   next()
 }
 

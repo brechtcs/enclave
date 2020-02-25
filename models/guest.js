@@ -2,6 +2,7 @@ var { getter } = require('stdprop')
 var { hash, number, string } = require('stdopt')
 var Address = require('./address')
 var Base = require('stdopt/base')
+var Host = require('./host')
 var Key = require('./key')
 var model = require('stdmodel')
 
@@ -28,7 +29,7 @@ Guest.add = function (g) {
 }
 
 Guest.get = function (key) {
-  return Guest(cache.find(g => String(g.key) === key))
+  return Guest(cache.find(g => String(g.key) === String(key)))
 }
 
 Guest.list = function () {
@@ -39,6 +40,10 @@ Guest.prototype.delete = function () {
   var idx = cache.indexOf(this.value())
   cache.splice(idx, 1)
   return this
+}
+
+Guest.prototype.equals = function (g) {
+  return String(this.key) === String(g.key)
 }
 
 Guest.prototype.toString = function () {
@@ -64,6 +69,11 @@ getter(Guest.prototype, 'url', function () {
     if (err) throw err
     return `http://[${g.address}]:${g.port}`
   })
+})
+
+getter(Guest.prototype, 'isHost', function () {
+  var h = Host.get()
+  return String(this.key) === String(h.publicKey)
 })
 
 module.exports = Guest

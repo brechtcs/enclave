@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <<common/head $in.title>>
+  <body>
+    <h1><<t host.name>></h1>
+    <nav>
+      <span><a href="..">stories</a></span>&nbsp;
+      <span><a href="../guests">guests</a></span>
+    </nav>
+    <article>
+      <header class="lede">
+        <<h $in.story.lede>>
+      </header>
+      <section class="main">
+        <<h $in.story.main>>
+      </section>
+    </article>
+  </body>
+</html>
