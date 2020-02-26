@@ -9,6 +9,7 @@ var proxy = createProxyServer()
 module.exports.display = display
 module.exports.identify = identify
 module.exports.receive = receive
+module.exports.redirect = redirect
 module.exports.tunnel = tunnel
 
 function display (req, res) {
@@ -32,53 +33,32 @@ function receive (req, res) {
   res.end()
 }
 
+function redirect (req, res) {
+  var host = Host.get()
+
+  if (String(host.publicKey) === req.params.key) {
+    res.redirect(req.url)
+  } else {
+    res.redirect('/guests/' + req.params.key + req.url)
+  }
+}
+
 function tunnel (req, res, next) {
-  if (req.url === '/') {
-    return next()
-  }
-
-  var parts, idx, key, guest
-  parts = req.url.split('/')
-  idx = destination(parts)
-  key = parts[idx]
+  var key, guest
+  key = req.params.key
   guest = Guest.get(key)
 
-  if (guest.isValid) {
-    res.setHeader('referer', req.headers.referer)
-    return res.redirect('/guests/' + parts.slice(idx).join('/'))
-  }
-  key = parts[1]
-  guest = Guest.get(key)
-
-  if (!guest.isValid) {
-    return next(new Error('guest not found: ' + key))
+  if (guest.isError) {
+    res.writeHead(404)
+    res.end('guest not found: ' + key)
+    return
+  } else if (guest.isHost) {
+    return res.redirect(req.url)
   }
 
-  req.url = parts.slice(2).join('/')
   req.headers['Enclave-Origin'] = req.get('Enclave-Origin') || String(Host.get().publicKey)
-  if (req.headers.referer) {
-    req.headers.referer = cut(req.headers.referer)
-  }
 
   proxy.web(req, res, { target: guest.url }, function (err) {
     if (err) next(err)
   })
-}
-
-function destination (parts) {
-  var i = parts.length - 1
-
-  while (i) {
-    if (parts[i] === 'guests' && parts[i + 1]) {
-      return i + 1
-    }
-    i--
-  }
-}
-
-function cut (referer) {
-  var url = new URL(referer)
-  var parts = url.pathname.split('/')
-  url.pathname = '/' + parts.slice(2).join('/')
-  return url.href
 }
