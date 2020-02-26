@@ -1,7 +1,6 @@
 var { join } = require('path')
 var Host = require('../models/host')
 var Mold = require('./mold')
-var body = require('body-parser')
 var drafts = require('./drafts')
 var express = require('express')
 var guests = require('./guests')
@@ -33,8 +32,8 @@ module.exports = function host (opts = {}) {
   server.get('/stories/:id', stories.detail)
   server.use(express.static(assets))
 
-  server.use(body.json())
-  server.use(body.urlencoded({ extended: false }))
+  server.use(express.json())
+  server.use(express.urlencoded({ extended: false }))
   server.post('/guests', guests.receive)
   server.post('/stories', stories.publish)
 
