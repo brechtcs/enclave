@@ -7,7 +7,7 @@ var mkdirp = require('mkdirp')
 var path = require('path')
 
 async function create (name, port) {
-  var paths = env(path.join('Enclave', name))
+  var paths = getEnv(name)
 
   await mkdirp(paths.config)
   var confPath = path.join(paths.config, 'config.json')
@@ -21,7 +21,7 @@ async function create (name, port) {
 }
 
 async function open (name, port) {
-  var paths = env(path.join('Enclave', name))
+  var paths = getEnv(name)
   var confPath = path.join(paths.config, 'config.json')
   var keyPath = path.join(paths.config, 'private.pem')
 
@@ -41,6 +41,12 @@ async function open (name, port) {
     port: host.port,
     address: '::ffff:127.0.0.1',
     key: host.publicKey.pem
+  })
+}
+
+function getEnv (name) {
+  return env(path.join('Enclave', name), {
+    suffix: ''
   })
 }
 
