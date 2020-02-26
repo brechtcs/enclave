@@ -17,6 +17,7 @@
     "mkdirp": "^1.0.3",
     "mold-template": "^2.0.1",
     "monotonic-timestamp": "0.0.9",
+    "morgan": "^1.9.1",
     "rehype-parse": "^6.0.2",
     "rehype-sanitize": "^3.0.0",
     "rehype-stringify": "^6.0.1",

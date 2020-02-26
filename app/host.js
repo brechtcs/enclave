@@ -5,7 +5,7 @@ var body = require('body-parser')
 var drafts = require('./drafts')
 var express = require('express')
 var guests = require('./guests')
-var logger = require('./logger')
+var morgan = require('./morgan')
 var number = require('stdopt/number')
 var stories = require('./stories')
 
@@ -22,7 +22,7 @@ module.exports = function host (opts = {}) {
   server.engine('html', mold.engine(server, 'html'))
 
   server.use(guests.identify)
-  server.use(logger)
+  server.use(morgan(':status :method :url (:guest)'))
   server.get('/', stories.overview)
   server.get('/drafts/new', drafts.create)
   server.get('/drafts/:id', drafts.display)
