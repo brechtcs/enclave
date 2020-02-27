@@ -25,11 +25,6 @@ function overview (req, res) {
 }
 
 function publish (req, res) {
-  if (!req.local) {
-    res.writeHead(403)
-    res.end('forbidden')
-    return
-  }
   var host = Host.get()
   var from = Guest.get(host.publicKey)
   var to = Guest.get(req.body.to)

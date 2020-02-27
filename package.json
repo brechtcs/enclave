@@ -26,7 +26,6 @@
     "stdopt": "^9.4.0",
     "stdprop": "^1.0.0",
     "stdrun": "^5.0.2",
-    "ua-parser-js": "^0.7.21",
     "unified": "^8.4.2"
   },
   "devDependencies": {

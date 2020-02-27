@@ -1,10 +1,11 @@
 var { join } = require('path')
 var Host = require('../models/host')
 var Mold = require('./mold')
+var auth = require('./auth')
 var drafts = require('./drafts')
 var express = require('express')
 var guests = require('./guests')
-var morgan = require('./morgan')
+var morgan = require('morgan')
 var number = require('stdopt/number')
 var stories = require('./stories')
 
@@ -20,8 +21,7 @@ module.exports = function host (opts = {}) {
   server.set('view engine', 'html')
   server.engine('html', mold.engine(server, 'html'))
 
-  server.use(guests.identify)
-  server.use(morgan(':status :method :url (:guest)'))
+  server.use(morgan(':status :method :url'))
   server.get('/', stories.overview)
   server.get('/drafts/new', drafts.create)
   server.get('/drafts/:id', drafts.display)
@@ -35,6 +35,7 @@ module.exports = function host (opts = {}) {
   server.use(express.json())
   server.use(express.urlencoded({ extended: false }))
   server.post('/guests', guests.receive)
+  server.use(auth.filter)
   server.post('/stories', stories.publish)
 
   var port = number(opts.port).or(host.port).value()
