@@ -1,6 +1,6 @@
 var { createProxyServer } = require('http-proxy')
-var Guest = require('../models/guest')
-var Host = require('../models/host')
+var Guest = require('../../models/guest')
+var Host = require('../../models/host')
 var client = require('client-ip')
 
 var proxy = createProxyServer()
