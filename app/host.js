@@ -21,11 +21,11 @@ module.exports = function host (opts = {}) {
   server.set('views', views)
   server.set('view engine', 'html')
   server.engine('html', mold.engine(server, 'html'))
-  ws(server)
+  if (opts.gateway) ws(server)
 
   server.use(morgan(':status :method :url'))
   server.use(auth.filter)
-  server.ws('/', guests.gateway.listen)
+  if (opts.gateway) server.ws('/', guests.gateway)
   server.get('/', stories.overview)
   server.get('/drafts/new', drafts.create)
   server.get('/drafts/:id', drafts.display)

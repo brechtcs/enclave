@@ -6,6 +6,7 @@ var run = require('stdrun')
 
 async function enclave (opts = {}, name) {
   var create = boolean(opts.create).or(false).value()
+  var gateway = boolean(opts.gateway).or(true).value()
   var port = number(opts.port).or(opts.p).or(nothing).value()
   name = string(name).value()
 
@@ -14,7 +15,7 @@ async function enclave (opts = {}, name) {
   }
   await db.open(name, port)
 
-  host({ port }).on('listening', function () {
+  host({ gateway, port }).on('listening', function () {
     var a = this.address()
     var msg = `Enclave is running on port ${a.port}`
     local.announce(a.port)

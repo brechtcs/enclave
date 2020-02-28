@@ -7,8 +7,8 @@ var client = require('client-ip')
 var INTRODUCE = 'introduce'
 var WELCOME = 'welcome'
 
+module.exports = listen
 module.exports.join = join
-module.exports.listen = listen
 
 function join (service) {
   if (Guest.has(service.name)) return
@@ -16,7 +16,12 @@ function join (service) {
   var host = Host.get()
   var ip = Address(service.host).or(service.addresses[0]).value()
   var url = `ws://[${ip}]:${service.port}/`
+
   var ws = new WebSocket(url)
+
+  ws.on('error', function () {
+    console.warn('failed to join', service.name)
+  })
 
   ws.on('message', function (msg) {
     var { type, data } = JSON.parse(msg)
