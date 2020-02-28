@@ -1,28 +1,27 @@
 var { createProxyServer } = require('http-proxy')
 var Guest = require('../../models/guest')
 var Host = require('../../models/host')
-var client = require('client-ip')
 
 var proxy = createProxyServer()
 
 module.exports.display = display
-module.exports.receive = receive
+module.exports.gateway = require('./gateway')
+module.exports.leave = leave
 module.exports.redirect = redirect
 module.exports.tunnel = tunnel
 
 function display (req, res) {
+  var host = Host.get()
   var title = 'Guests'
-  var guests = Guest.list()
+  var guests = Guest.list().filter(function (guest) {
+    return String(guest.key) !== String(host.publicKey)
+  })
+
   res.render('guests', { title, guests })
 }
 
-function receive (req, res) {
-  var guest = req.body
-  guest.address = client(req)
-
-  Guest.add(guest)
-  res.writeHead(204)
-  res.end()
+function leave (service) {
+  Guest.get(service.name).delete()
 }
 
 function redirect (req, res) {

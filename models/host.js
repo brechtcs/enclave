@@ -55,7 +55,10 @@ Host.prototype.change = function (prop, val) {
 }
 
 Host.prototype.toJSON = function () {
-  return this.value()
+  var name = this.name
+  var key = this.publicKey.pem
+  var port = this.port
+  return { name, key, port }
 }
 
 getter(Host.prototype, 'name', function () {

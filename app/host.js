@@ -8,6 +8,7 @@ var guests = require('./guests')
 var morgan = require('morgan')
 var number = require('stdopt/number')
 var stories = require('./stories')
+var ws = require('express-ws')
 
 var assets = join(__dirname, '../public')
 var views = join(__dirname, '../views')
@@ -20,8 +21,11 @@ module.exports = function host (opts = {}) {
   server.set('views', views)
   server.set('view engine', 'html')
   server.engine('html', mold.engine(server, 'html'))
+  ws(server)
 
   server.use(morgan(':status :method :url'))
+  server.use(auth.filter)
+  server.ws('/', guests.gateway.listen)
   server.get('/', stories.overview)
   server.get('/drafts/new', drafts.create)
   server.get('/drafts/:id', drafts.display)
@@ -31,11 +35,7 @@ module.exports = function host (opts = {}) {
   server.get('/stories', stories.overview)
   server.get('/stories/:id', stories.detail)
   server.use(express.static(assets))
-
-  server.use(express.json())
   server.use(express.urlencoded({ extended: false }))
-  server.post('/guests', guests.receive)
-  server.use(auth.filter)
   server.post('/stories', stories.publish)
 
   var port = number(opts.port).or(host.port).value()

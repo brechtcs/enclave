@@ -36,7 +36,7 @@ async function open (name, port) {
     port: port ? [port, host.port] : host.port
   })
 
-  Guest.add({
+  Guest.join({
     name: host.name,
     port: host.port,
     address: '::ffff:127.0.0.1',

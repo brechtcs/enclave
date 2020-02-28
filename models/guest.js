@@ -6,7 +6,7 @@ var Host = require('./host')
 var Key = require('./key')
 var model = require('stdmodel')
 
-var cache = []
+var cache = new Map()
 var struct = {
   name: string,
   key: Key,
@@ -22,23 +22,29 @@ Guest.parse = function (g) {
   return hash(g, struct)
 }
 
-Guest.add = function (g) {
+Guest.get = function (key) {
+  return Guest(cache.get(String(key)))
+}
+
+Guest.has = function (key) {
+  return cache.has(String(key))
+}
+
+Guest.join = function (g) {
   var guest = Guest(g).use()
-  cache.push(guest)
+  var key = String(guest.key)
+
+  if (Guest.has(key)) console.warn('Already joined:', guest.name)
+  else cache.set(key, guest)
   return guest
 }
 
-Guest.get = function (key) {
-  return Guest(cache.find(g => String(g.key) === String(key)))
-}
-
 Guest.list = function () {
-  return cache.slice()
+  return Array.from(cache.values())
 }
 
 Guest.prototype.delete = function () {
-  var idx = cache.indexOf(this.value())
-  cache.splice(idx, 1)
+  cache.delete(String(this.key))
   return this
 }
 
