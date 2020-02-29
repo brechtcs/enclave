@@ -3,12 +3,12 @@ var { getter } = require('stdprop')
 var Base = require('stdopt/base')
 var crypto = require('crypto')
 
-function Key (k) {
-  if (this instanceof Key) Base.call(this, k)
-  else return new Key(k)
+function PublicKey (k) {
+  if (this instanceof PublicKey) Base.call(this, k)
+  else return new PublicKey(k)
 }
 
-Key.parse = function (k) {
+PublicKey.parse = function (k) {
   if (!k) return
   if (k.asymmetricKeyType === 'ed25519' && k.type === 'public') {
     return k
@@ -25,22 +25,22 @@ Key.parse = function (k) {
   }
 }
 
-Key.prototype.toString = function () {
+PublicKey.prototype.toString = function () {
   return base32.stringify(this.buffer.slice(-32), { pad: false })
 }
 
-getter(Key.prototype, 'buffer', function () {
+getter(PublicKey.prototype, 'buffer', function () {
   return this.use(function (err, k) {
     if (err) throw err
     return k.export({ format: 'der', type: 'spki' })
   })
 })
 
-getter(Key.prototype, 'pem', function () {
+getter(PublicKey.prototype, 'pem', function () {
   return this.use(function (err, k) {
     if (err) throw err
     return k.export({ format: 'pem', type: 'spki' })
   })
 })
 
-module.exports = Key
+module.exports = PublicKey
