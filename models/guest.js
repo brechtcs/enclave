@@ -47,8 +47,8 @@ Guest.list = function () {
 }
 
 Guest.prototype.delete = function () {
-  cache.delete(String(this.key))
-  return this
+  if (this.isError) return false
+  return cache.delete(String(this.key))
 }
 
 Guest.prototype.equals = function (g) {
