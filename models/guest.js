@@ -4,7 +4,6 @@ var Address = require('./address')
 var Base = require('stdopt/base')
 var Host = require('./host')
 var PublicKey = require('./crypto/public-key')
-var model = require('stdmodel')
 
 var cache = new Map()
 var struct = {
@@ -14,12 +13,16 @@ var struct = {
   port: number
 }
 
-var Guest = model(function Guest (g) {
-  Base.call(this, g)
-})
+function Guest (g) {
+  if (this instanceof Guest) Base.call(this, g)
+  else return new Guest(g)
+}
 
 Guest.parse = function (g) {
-  return hash(g, struct)
+  return hash(g, struct).use(function (err, guest) {
+    if (err) return new Error(err)
+    return guest
+  })
 }
 
 Guest.get = function (key) {

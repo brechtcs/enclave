@@ -17,7 +17,10 @@ var Host = model(function Host (h) {
 })
 
 Host.parse = function (h) {
-  return hash(h, struct)
+  return hash(h, struct).use(function (err, host) {
+    if (err) return new Error(err)
+    return host
+  })
 }
 
 Host.create = function ({ name, port }) {
