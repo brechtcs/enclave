@@ -12,7 +12,6 @@
     "express-ws": "^4.0.0",
     "get-port": "^5.1.1",
     "hastscript": "^5.1.1",
-    "http-proxy": "^1.18.0",
     "ip": "^1.1.5",
     "mkdirp": "^1.0.3",
     "mold-template": "^2.0.1",
@@ -26,6 +25,8 @@
     "stdopt": "^9.4.0",
     "stdprop": "^1.0.0",
     "stdrun": "^5.0.2",
+    "superagent": "^5.2.2",
+    "superagent-prefix": "0.0.2",
     "unified": "^8.4.2",
     "ws": "^7.2.1"
   },

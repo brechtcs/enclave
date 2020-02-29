@@ -1,8 +1,6 @@
-var { createProxyServer } = require('http-proxy')
 var Guest = require('../../models/guest')
 var gateway = require('./gateway')
-
-var proxy = createProxyServer()
+var tunnel = require('./tunnel')
 
 module.exports.display = display
 module.exports.gateway = gateway
@@ -30,22 +28,4 @@ function redirect (req, res, next) {
   } else {
     next()
   }
-}
-
-function tunnel (req, res, next) {
-  var key, guest
-  key = req.params.key
-  guest = Guest.get(key)
-
-  if (guest.isError) {
-    res.writeHead(404)
-    res.end('guest not found: ' + key)
-    return
-  } else if (guest.isHost) {
-    return res.redirect(req.url)
-  }
-
-  proxy.web(req, res, { target: guest.url }, function (err) {
-    if (err) next(err)
-  })
 }

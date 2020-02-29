@@ -1,16 +1,15 @@
 var { getter } = require('stdprop')
-var { hash, number, string } = require('stdopt')
-var Address = require('./address')
+var { hash, string } = require('stdopt')
 var Base = require('stdopt/base')
 var Host = require('./host')
+var Method = require('./method')
 var PublicKey = require('./crypto/public-key')
 
 var cache = new Map()
 var struct = {
   name: string,
   key: PublicKey,
-  address: Address,
-  port: number
+  send: Method
 }
 
 function Guest (g) {
@@ -55,6 +54,13 @@ Guest.prototype.equals = function (g) {
   return String(this.key) === String(g.key)
 }
 
+Guest.prototype.send = function (data) {
+  return this.use(function (err, g) {
+    if (err) throw new Error(err)
+    return g.send(data)
+  })
+}
+
 getter(Guest.prototype, 'key', function key () {
   return this.use(function (err, g) {
     if (err) throw new Error(err)
@@ -66,13 +72,6 @@ getter(Guest.prototype, 'name', function name () {
   return this.use(function (err, g) {
     if (err) throw new Error(err)
     return g.name
-  })
-})
-
-getter(Guest.prototype, 'url', function url () {
-  return this.use(function (err, g) {
-    if (err) throw new Error(err)
-    return `http://[${g.address}]:${g.port}`
   })
 })
 
