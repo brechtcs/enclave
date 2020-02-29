@@ -55,34 +55,33 @@ Guest.prototype.equals = function (g) {
   return String(this.key) === String(g.key)
 }
 
-Guest.prototype.toString = function () {
-  return 'guest: ' + (this.isValid ? this.value().name : 'None')
-}
-
-getter(Guest.prototype, 'key', function () {
+getter(Guest.prototype, 'key', function key () {
   return this.use(function (err, g) {
-    if (err) throw err
+    if (err) throw new Error(err)
     return PublicKey(g.key)
   })
 })
 
-getter(Guest.prototype, 'name', function () {
+getter(Guest.prototype, 'name', function name () {
   return this.use(function (err, g) {
-    if (err) throw err
+    if (err) throw new Error(err)
     return g.name
   })
 })
 
-getter(Guest.prototype, 'url', function () {
+getter(Guest.prototype, 'url', function url () {
   return this.use(function (err, g) {
-    if (err) throw err
+    if (err) throw new Error(err)
     return `http://[${g.address}]:${g.port}`
   })
 })
 
-getter(Guest.prototype, 'isHost', function () {
-  var h = Host.get()
-  return String(this.key) === String(h.publicKey)
+getter(Guest.prototype, 'isHost', function isHost () {
+  return this.use(function (err, g) {
+    if (err) return false
+    var h = Host.get()
+    return String(this.key) === String(h.publicKey)
+  })
 })
 
 module.exports = Guest

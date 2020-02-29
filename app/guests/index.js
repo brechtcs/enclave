@@ -1,22 +1,18 @@
 var { createProxyServer } = require('http-proxy')
 var Guest = require('../../models/guest')
-var Host = require('../../models/host')
+var gateway = require('./gateway')
 
 var proxy = createProxyServer()
 
 module.exports.display = display
-module.exports.gateway = require('./gateway')
+module.exports.gateway = gateway
 module.exports.leave = leave
 module.exports.redirect = redirect
 module.exports.tunnel = tunnel
 
 function display (req, res) {
-  var host = Host.get()
   var title = 'Guests'
-  var guests = Guest.list().filter(function (guest) {
-    return String(guest.key) !== String(host.publicKey)
-  })
-
+  var guests = Guest.list().filter(g => !g.isHost)
   res.render('guests', { title, guests })
 }
 
@@ -24,13 +20,15 @@ function leave (service) {
   Guest.get(service.name).delete()
 }
 
-function redirect (req, res) {
-  var host = Host.get()
+function redirect (req, res, next) {
+  var guest = Guest.get(req.params.key)
 
-  if (String(host.publicKey) === req.params.key) {
+  if (guest.isHost) {
     res.redirect(req.url)
-  } else {
+  } else if (guest.isValid) {
     res.redirect('/guests/' + req.params.key + req.url)
+  } else {
+    next()
   }
 }
 
