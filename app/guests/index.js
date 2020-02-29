@@ -47,8 +47,6 @@ function tunnel (req, res, next) {
     return res.redirect(req.url)
   }
 
-  req.headers['Enclave-Origin'] = req.get('Enclave-Origin') || String(Host.get().publicKey)
-
   proxy.web(req, res, { target: guest.url }, function (err) {
     if (err) next(err)
   })
