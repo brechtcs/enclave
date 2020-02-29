@@ -3,13 +3,13 @@ var { hash, number, string } = require('stdopt')
 var Address = require('./address')
 var Base = require('stdopt/base')
 var Host = require('./host')
-var Key = require('./key')
+var PublicKey = require('./crypto/public-key')
 var model = require('stdmodel')
 
 var cache = new Map()
 var struct = {
   name: string,
-  key: Key,
+  key: PublicKey,
   address: Address,
   port: number
 }
@@ -59,7 +59,7 @@ Guest.prototype.toString = function () {
 getter(Guest.prototype, 'key', function () {
   return this.use(function (err, g) {
     if (err) throw err
-    return Key(g.key)
+    return PublicKey(g.key)
   })
 })
 

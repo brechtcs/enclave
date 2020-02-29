@@ -1,8 +1,8 @@
 var { hash, nothing, number, string } = require('stdopt')
 var { getter, setter, prop } = require('stdprop')
 var Base = require('stdopt/base')
-var Key = require('./key')
-var crypto = require('crypto')
+var PrivateKey = require('./crypto/private-key')
+var PublicKey = require('./crypto/public-key')
 var model = require('stdmodel')
 
 var instance = null
@@ -85,7 +85,7 @@ getter(Host.prototype, 'privateKey', function () {
 getter(Host.prototype, 'publicKey', function () {
   return this.use(function (err, h) {
     if (err) throw err
-    return Key(h.key)
+    return PublicKey(h.key)
   })
 })
 
@@ -94,40 +94,3 @@ setter(Host.prototype, 'port', function (p) {
 })
 
 module.exports = Host
-
-/**
- * PrivateKey definition
- */
-function PrivateKey (k) {
-  if (this instanceof PrivateKey) Base.call(this, k)
-  else return new PrivateKey(k)
-}
-
-PrivateKey.generate = function () {
-  var pair = crypto.generateKeyPairSync('ed25519')
-  return pair.privateKey
-}
-
-PrivateKey.parse = function (k) {
-  if (!k) return
-  if (k.asymmetricKeyType === 'ed25519' && k.type === 'private') {
-    return k
-  }
-
-  try {
-    return crypto.createPrivateKey({
-      key: k,
-      format: Buffer.isBuffer(k) ? 'der' : 'pem',
-      type: 'pkcs8'
-    })
-  } catch (err) {
-    return err
-  }
-}
-
-getter(PrivateKey.prototype, 'pem', function () {
-  return this.use(function (err, k) {
-    if (err) throw err
-    return k.export({ format: 'pem', type: 'pkcs8' })
-  })
-})
