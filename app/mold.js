@@ -16,15 +16,14 @@ util.inherits(ExpressMold, Mold)
 
 ExpressMold.prototype.engine = function (app, ext) {
   var mold = new DynamicMold(app, ext, this.env)
-  for (var name in this.defs) mold.defs[name] = this.defs[name]
+  for (var name in this.defs) {
+    mold.defs[name] = this.defs[name]
+  }
 
   return function (file, opts, cb) {
-    fs.readFile(file, mold.enc, function (err, content) {
-      if (err) return cb(err)
-      var template = mold.bake(content)
-      var view = template(opts)
-      cb(null, view)
-    })
+    var name = path.relative(mold.root, file)
+    var view = mold.dispatch(name, opts)
+    cb(null, view)
   }
 }
 
@@ -41,14 +40,25 @@ function DynamicMold (app, ext, env) {
 util.inherits(DynamicMold, Mold)
 
 DynamicMold.prototype.dispatch = function (name, arg) {
+  var template = this.get(name) || this.read(name)
+  return template(arg)
+}
+
+DynamicMold.prototype.get = function (name) {
   if (name in this.defs) {
-    return this.defs[name](arg)
+    return this.defs[name]
+  } else if (name + this.ext in this.defs) {
+    return this.defs[name + this.ext]
   }
+}
+
+DynamicMold.prototype.read = function (name) {
+  var file = path.join(this.root, name)
+  if (!fs.existsSync(file)) file += this.ext
+
   try {
-    var file = path.join(this.root, name + this.ext)
     var content = fs.readFileSync(file, this.enc)
-    var template = this.bake(content)
-    return template(arg)
+    return this.bake(content)
   } catch (err) {
     throw new Error("Invalid template command: '" + name + "'.")
   }
