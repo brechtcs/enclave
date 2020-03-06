@@ -1,5 +1,5 @@
-var Host = require('../models/host')
-var Guest = require('../models/guest')
+var Host = require('./models/host')
+var Guest = require('./models/guest')
 var env = require('env-paths')
 var fs = require('fs').promises
 var getPort = require('get-port')

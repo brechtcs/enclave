@@ -1,5 +1,5 @@
 var { boolean, nothing, number, string } = require('stdopt')
-var db = require('./app/data')
+var db = require('./storage')
 var host = require('./app/host')
 var local = require('./app/local')
 var run = require('stdrun')
