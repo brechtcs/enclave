@@ -9,11 +9,13 @@
     </nav>
     <article>
       <header class="lede">
-        <<h $in.story.lede>>
+        <<h $in.story.lede.content>>
       </header>
-      <section class="main">
-        <<h $in.story.main>>
-      </section>
+      <<for section $in.story.sections>>
+        <section>
+          <<h section.content>>
+        </section>
+      <</for>>
     </article>
   </body>
 </html>

@@ -29,7 +29,7 @@ function publish (req, res) {
   var from = Guest.get(host.publicKey)
   var to = Guest.get(req.body.to)
   var lede = req.body.lede
-  var main = req.body.main
-  Story.create({ from, to, lede, main })
+  var sections = req.body[0]
+  Story.create({ from, to, lede, sections })
   res.redirect('/')
 }

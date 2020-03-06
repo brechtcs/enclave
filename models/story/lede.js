@@ -1,3 +1,4 @@
+var { hash, string } = require('stdopt')
 var Base = require('stdopt/base')
 var parse = require('rehype-parse')
 var sanitize = require('rehype-sanitize')
@@ -6,13 +7,22 @@ var stringify = require('rehype-stringify')
 var unified = require('unified')
 var textup = require('./textup')
 
+var struct = {
+  content: string
+}
+
 function Lede (html) {
   if (this instanceof Lede) Base.call(this, html)
   else return new Lede(html)
 }
 
 Lede.parse = function (html) {
-  return rehype(html)
+  var content = rehype(html)
+
+  return hash({ content }, struct).use(function (err, l) {
+    if (err) throw new Error(err)
+    return l
+  })
 }
 
 module.exports = Lede

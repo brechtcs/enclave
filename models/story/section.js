@@ -1,3 +1,4 @@
+var { hash, string } = require('stdopt')
 var Base = require('stdopt/base')
 var parse = require('rehype-parse')
 var sanitize = require('rehype-sanitize')
@@ -6,16 +7,25 @@ var stringify = require('rehype-stringify')
 var unified = require('unified')
 var textup = require('./textup')
 
-function Main (html) {
-  if (this instanceof Main) Base.call(this, html)
-  else return new Main(html)
+var struct = {
+  content: string
 }
 
-Main.parse = function (html) {
-  return rehype(html)
+function Section (html) {
+  if (this instanceof Section) Base.call(this, html)
+  else return new Section(html)
 }
 
-module.exports = Main
+Section.parse = function (html) {
+  var content = rehype(html)
+
+  return hash({ content }, struct).use(function (err, s) {
+    if (err) throw new Error(err)
+    return s
+  })
+}
+
+module.exports = Section
 
 /**
  * Rehype parsing logic

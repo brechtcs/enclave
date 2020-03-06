@@ -1,9 +1,9 @@
-var { hash, number } = require('stdopt')
+var { hash, list, number } = require('stdopt')
 var { getter } = require('stdprop')
 var Base = require('stdopt/base')
 var Guest = require('../guest')
 var Lede = require('./lede')
-var Main = require('./main')
+var Section = require('./section')
 var ts = require('monotonic-timestamp')
 
 var cache = new Map()
@@ -13,7 +13,7 @@ var struct = {
   from: Guest,
   to: Guest,
   lede: Lede,
-  main: Main
+  sections: list.of(Section)
 }
 
 function Story (s) {
@@ -37,7 +37,8 @@ Story.create = function (s) {
 }
 
 Story.get = function (id) {
-  return Story(cache.get(Number(id)))
+  var story = cache.get(Number(id))
+  return story || Story(story)
 }
 
 Story.list = function () {
@@ -79,10 +80,10 @@ getter(Story.prototype, 'lede', function () {
   })
 })
 
-getter(Story.prototype, 'main', function () {
+getter(Story.prototype, 'sections', function () {
   return this.use(function (err, s) {
     if (err) throw err
-    return s.main
+    return s.sections
   })
 })
 
