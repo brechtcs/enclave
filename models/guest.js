@@ -4,6 +4,7 @@ var Base = require('stdopt/base')
 var Host = require('./host')
 var Method = require('./method')
 var PublicKey = require('./crypto/public-key')
+var VError = require('verror')
 
 var cache = new Map()
 var struct = {
@@ -19,7 +20,7 @@ function Guest (g) {
 
 Guest.parse = function (g) {
   return hash(g, struct).use(function (err, guest) {
-    if (err) return new Error(err)
+    if (err) return new VError(err, 'Invalid Guest')
     return guest
   })
 }
@@ -56,21 +57,21 @@ Guest.prototype.equals = function (g) {
 
 Guest.prototype.send = function (data) {
   return this.use(function (err, g) {
-    if (err) throw new Error(err)
+    if (err) throw new VError(err, 'Cannot send to Guest')
     return g.send(data)
   })
 }
 
 getter(Guest.prototype, 'key', function key () {
   return this.use(function (err, g) {
-    if (err) throw new Error(err)
+    if (err) throw new VError(err, 'Cannot get key')
     return PublicKey(g.key)
   })
 })
 
 getter(Guest.prototype, 'name', function name () {
   return this.use(function (err, g) {
-    if (err) throw new Error(err)
+    if (err) throw new VError(err, 'Cannot get key')
     return g.name
   })
 })

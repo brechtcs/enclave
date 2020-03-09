@@ -1,6 +1,7 @@
 var { base32 } = require('rfc4648')
 var { getter } = require('stdprop')
 var Base = require('stdopt/base')
+var VError = require('verror')
 var crypto = require('crypto')
 
 function PublicKey (k) {
@@ -21,7 +22,7 @@ PublicKey.parse = function (k) {
       type: 'spki'
     })
   } catch (err) {
-    return err
+    return new VError(err, 'Invalid public key')
   }
 }
 
@@ -29,16 +30,16 @@ PublicKey.prototype.toString = function () {
   return base32.stringify(this.buffer.slice(-32), { pad: false })
 }
 
-getter(PublicKey.prototype, 'buffer', function () {
+getter(PublicKey.prototype, 'buffer', function buffer () {
   return this.use(function (err, k) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get buffer')
     return k.export({ format: 'der', type: 'spki' })
   })
 })
 
-getter(PublicKey.prototype, 'pem', function () {
+getter(PublicKey.prototype, 'pem', function pem () {
   return this.use(function (err, k) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get pem')
     return k.export({ format: 'pem', type: 'spki' })
   })
 })

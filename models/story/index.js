@@ -4,6 +4,7 @@ var Base = require('stdopt/base')
 var Guest = require('../guest')
 var Lede = require('./lede')
 var Section = require('./section')
+var VError = require('verror')
 var ts = require('monotonic-timestamp')
 
 var cache = new Map()
@@ -23,7 +24,7 @@ function Story (s) {
 
 Story.parse = function (s) {
   return hash(s, struct).use(function (err, story) {
-    if (err) return new Error(err)
+    if (err) return new VError(err, 'Invalid Story')
     return story
   })
 }
@@ -45,44 +46,44 @@ Story.list = function () {
   return Array.from(cache.values())
 }
 
-getter(Story.prototype, 'id', function () {
+getter(Story.prototype, 'id', function id () {
   return this.use(function (err, s) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get id')
     return s.id
   })
 })
 
-getter(Story.prototype, 'posted', function () {
+getter(Story.prototype, 'posted', function posted () {
   return this.use(function (err, s) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get posted')
     return s.posted
   })
 })
 
-getter(Story.prototype, 'from', function () {
+getter(Story.prototype, 'from', function from () {
   return this.use(function (err, s) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get from')
     return Guest(s.from)
   })
 })
 
-getter(Story.prototype, 'to', function () {
+getter(Story.prototype, 'to', function to () {
   return this.use(function (err, s) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get to')
     return Guest(s.to)
   })
 })
 
-getter(Story.prototype, 'lede', function () {
+getter(Story.prototype, 'lede', function lede () {
   return this.use(function (err, s) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get lede')
     return s.lede
   })
 })
 
-getter(Story.prototype, 'sections', function () {
+getter(Story.prototype, 'sections', function sections () {
   return this.use(function (err, s) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get sections')
     return s.sections
   })
 })

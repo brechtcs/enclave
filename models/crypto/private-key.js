@@ -1,5 +1,6 @@
 var { getter } = require('stdprop')
 var Base = require('stdopt/base')
+var VError = require('verror')
 var crypto = require('crypto')
 
 function PrivateKey (k) {
@@ -25,13 +26,13 @@ PrivateKey.parse = function (k) {
       type: 'pkcs8'
     })
   } catch (err) {
-    return err
+    return new VError(err, 'Invalid private key')
   }
 }
 
-getter(PrivateKey.prototype, 'pem', function () {
+getter(PrivateKey.prototype, 'pem', function pem () {
   return this.use(function (err, k) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get pem')
     return k.export({ format: 'pem', type: 'pkcs8' })
   })
 })

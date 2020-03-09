@@ -1,5 +1,6 @@
 var { hash, string } = require('stdopt')
 var Base = require('stdopt/base')
+var VError = require('verror')
 var parse = require('rehype-parse')
 var sanitize = require('rehype-sanitize')
 var schema = require('./sanitize')
@@ -20,7 +21,7 @@ Lede.parse = function (html) {
   var content = rehype(html)
 
   return hash({ content }, struct).use(function (err, l) {
-    if (err) throw new Error(err)
+    if (err) throw new VError(err, 'Invalid Lede')
     return l
   })
 }

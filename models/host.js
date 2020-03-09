@@ -3,6 +3,7 @@ var { getter, setter, prop } = require('stdprop')
 var Base = require('stdopt/base')
 var PrivateKey = require('./crypto/private-key')
 var PublicKey = require('./crypto/public-key')
+var VError = require('verror')
 var model = require('stdmodel')
 
 var instance = null
@@ -18,7 +19,7 @@ var Host = model(function Host (h) {
 
 Host.parse = function (h) {
   return hash(h, struct).use(function (err, host) {
-    if (err) return new Error(err)
+    if (err) return new VError(err, 'Invalid Host')
     return host
   })
 }
@@ -39,7 +40,7 @@ Host.init = function (config, key) {
   var host = Host(config)
 
   return host.use(function (err) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot init Host')
     instance = this
     return this
   })
@@ -51,7 +52,7 @@ Host.get = function () {
 
 Host.prototype.change = function (prop, val) {
   return this.use(function (err, h) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot change Host')
     h[prop] = val
     return this.use()
   })
@@ -64,35 +65,35 @@ Host.prototype.toJSON = function () {
   return { name, key, port }
 }
 
-getter(Host.prototype, 'name', function () {
+getter(Host.prototype, 'name', function name () {
   return this.use(function (err, h) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get name')
     return h.name
   })
 })
 
-getter(Host.prototype, 'port', function () {
+getter(Host.prototype, 'port', function port () {
   return this.use(function (err, h) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get port')
     return h.port
   })
 })
 
-getter(Host.prototype, 'privateKey', function () {
+getter(Host.prototype, 'privateKey', function privateKey () {
   return this.use(function (err, h) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get private key')
     return PrivateKey(h.key)
   })
 })
 
-getter(Host.prototype, 'publicKey', function () {
+getter(Host.prototype, 'publicKey', function publicKey () {
   return this.use(function (err, h) {
-    if (err) throw err
+    if (err) throw new VError(err, 'Cannot get public key')
     return PublicKey(h.key)
   })
 })
 
-setter(Host.prototype, 'port', function (p) {
+setter(Host.prototype, 'port', function port (p) {
   this.change('port', number(p).value())
 })
 
