@@ -1,11 +1,12 @@
 var { hash, nothing, number, string } = require('stdopt')
 var { getter, setter, prop } = require('stdprop')
 var Base = require('stdopt/base')
+var Events = require('events')
 var PrivateKey = require('./crypto/private-key')
 var PublicKey = require('./crypto/public-key')
 var VError = require('verror')
-var model = require('stdmodel')
 
+var events = new Events()
 var instance = null
 var struct = {
   key: PrivateKey,
@@ -13,9 +14,10 @@ var struct = {
   port: [nothing, number]
 }
 
-var Host = model(function Host (h) {
-  Base.call(this, h)
-})
+function Host (h) {
+  if (this instanceof Host) Base.call(this, h)
+  else return new Host(h)
+}
 
 Host.parse = function (h) {
   return hash(h, struct).use(function (err, host) {
@@ -32,6 +34,10 @@ Host.create = function ({ name, port }) {
   return Host(host)
 }
 
+Host.get = function () {
+  return instance
+}
+
 Host.init = function (config, key) {
   if (instance) {
     throw new Error('Host already initialized')
@@ -42,20 +48,13 @@ Host.init = function (config, key) {
   return host.use(function (err) {
     if (err) throw new VError(err, 'Cannot init Host')
     instance = this
+    events.emit('init', this)
     return this
   })
 }
 
-Host.get = function () {
-  return instance
-}
-
-Host.prototype.change = function (prop, val) {
-  return this.use(function (err, h) {
-    if (err) throw new VError(err, 'Cannot change Host')
-    h[prop] = val
-    return this.use()
-  })
+Host.on = function (event, handler) {
+  events.on(event, handler)
 }
 
 Host.prototype.toJSON = function () {
@@ -94,7 +93,19 @@ getter(Host.prototype, 'publicKey', function publicKey () {
 })
 
 setter(Host.prototype, 'port', function port (p) {
-  this.change('port', number(p).value())
+  this.use(function (err, h) {
+    if (err) {
+      throw new VError(err, 'Cannot set Host.port')
+    } else if (h.port === p) {
+      return
+    }
+
+    h.port = number(p)
+      .or(new Error('Invalid port: ' + p))
+      .value()
+
+    events.emit('change', this.use())
+  })
 })
 
 module.exports = Host
